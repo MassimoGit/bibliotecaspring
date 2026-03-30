@@ -1,10 +1,9 @@
 package com.corso.bibliotecaspring.controllers;
 
+import com.corso.bibliotecaspring.entities.User;
 import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
-import com.corso.bibliotecaspring.models.request.UserRequestDTO;
 import com.corso.bibliotecaspring.models.response.UserResponseDTO;
 import com.corso.bibliotecaspring.services.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +34,8 @@ public class UserController {
 
     // POST /api/utenti — registra un nuovo utente
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
+    public ResponseEntity<UserResponseDTO> create(@RequestBody User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(user));
     }
 
     // DELETE /api/utenti/{id} — elimina un utente dal sistema

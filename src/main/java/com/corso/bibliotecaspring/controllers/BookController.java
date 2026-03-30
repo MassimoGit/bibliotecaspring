@@ -1,9 +1,8 @@
 package com.corso.bibliotecaspring.controllers;
 
-import com.corso.bibliotecaspring.models.request.BookRequestDTO;
+import com.corso.bibliotecaspring.entities.Book;
 import com.corso.bibliotecaspring.models.response.BookResponseDTO;
 import com.corso.bibliotecaspring.services.BookService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +27,8 @@ public class BookController {
 
     // POST /api/libri — aggiunge un nuovo libro al catalogo
     @PostMapping
-    public ResponseEntity<BookResponseDTO> create(@Valid @RequestBody BookRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(dto));
+    public ResponseEntity<BookResponseDTO> create(@RequestBody Book book) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(book));
     }
 
     // DELETE /api/libri/{id} — rimuove un libro dal catalogo

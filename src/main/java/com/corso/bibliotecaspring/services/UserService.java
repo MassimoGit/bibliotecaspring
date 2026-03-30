@@ -2,7 +2,6 @@ package com.corso.bibliotecaspring.services;
 
 import com.corso.bibliotecaspring.models.response.BookResponseDTO;
 import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
-import com.corso.bibliotecaspring.models.request.UserRequestDTO;
 import com.corso.bibliotecaspring.models.response.UserResponseDTO;
 import com.corso.bibliotecaspring.entities.Book;
 import com.corso.bibliotecaspring.entities.User;
@@ -38,12 +37,8 @@ public class UserService {
         return toDetailDTO(user);
     }
 
-    public UserResponseDTO create(UserRequestDTO dto) {
-        User user = new User();
-        user.setName(dto.getName());
-        user.setSurname(dto.getSurname());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
+    // Riceve l'entity direttamente dal controller (bad practice: nessuna validazione)
+    public UserResponseDTO create(User user) {
         User saved = userRepository.save(user);
         return toDTO(saved);
     }
