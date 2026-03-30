@@ -1,0 +1,3 @@
+# Analisi del Testing
+1. Di seguito le principali considerazioni emerse durante i test dell'applicazione:Criticità (Vincoli Foreign Key): Il database impedisce l'eliminazione di utenti o libri se associati a prestiti esistenti, causando un'eccezione non gestita. Andrà intercettato l'errore restituendo all'utente un messaggio di errore appropriato.
+2. Sviluppi futuri (Validazione Dati): Attualmente l'API accetta i payload JSON senza controlli, esponendo al rischio di dati inconsistenti. Sarà necessario implementare annotazioni di validazione (es. @NotBlank, @NotNull) per bloccare preventivamente le richieste errate.
