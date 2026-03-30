@@ -1,10 +1,8 @@
 package com.corso.bibliotecaspring.models.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UserResponseDTO {
 
     private Long id;

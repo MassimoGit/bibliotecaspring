@@ -1,11 +1,9 @@
 package com.corso.bibliotecaspring.models.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UserRequestDTO {
 
     @NotBlank(message = "Il nome è obbligatorio")
