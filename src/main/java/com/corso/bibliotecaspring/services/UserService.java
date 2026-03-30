@@ -1,11 +1,12 @@
 package com.corso.bibliotecaspring.services;
 
-import com.corso.bibliotecaspring.models.response.BookResponseDTO;
-import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
-import com.corso.bibliotecaspring.models.response.UserResponseDTO;
 import com.corso.bibliotecaspring.entities.Book;
+import com.corso.bibliotecaspring.entities.Lent;
 import com.corso.bibliotecaspring.entities.User;
 import com.corso.bibliotecaspring.exceptions.ResourceNotFoundException;
+import com.corso.bibliotecaspring.models.response.LentResponseDTO;
+import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
+import com.corso.bibliotecaspring.models.response.UserResponseDTO;
 import com.corso.bibliotecaspring.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class UserService {
         return result;
     }
 
-    // Restituisce il dettaglio utente con la lista dei libri attualmente in prestito
+    // Restituisce il dettaglio utente con la lista di tutti i suoi prestiti (attivi e passati)
     public UserDetailResponseDTO findDetailById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " + id));
@@ -49,7 +50,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    // Converte l'entity User nel DTO semplice (senza lista libri)
+    // Converte l'entity User nel DTO semplice (senza lista prestiti)
     public UserResponseDTO toDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
@@ -60,7 +61,7 @@ public class UserService {
         return dto;
     }
 
-    // Converte l'entity User nel DTO di dettaglio (con lista libri in prestito)
+    // Converte l'entity User nel DTO di dettaglio (con lista prestiti)
     public UserDetailResponseDTO toDetailDTO(User user) {
         UserDetailResponseDTO dto = new UserDetailResponseDTO();
         dto.setId(user.getId());
@@ -69,16 +70,20 @@ public class UserService {
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
 
-        List<BookResponseDTO> bookDTOs = new ArrayList<>();
-        for (Book book : user.getLent()) {
-            BookResponseDTO bookDTO = new BookResponseDTO();
-            bookDTO.setId(book.getId());
-            bookDTO.setTitle(book.getTitle());
-            bookDTO.setAuthor(book.getAuthor());
-            bookDTO.setIsbn(book.getIsbn());
-            bookDTOs.add(bookDTO);
+        List<LentResponseDTO> lentDTOs = new ArrayList<>();
+        for (Lent lent : user.getLent()) {
+            Book book = lent.getBook();
+            LentResponseDTO lentDTO = new LentResponseDTO();
+            lentDTO.setId(lent.getId());
+            lentDTO.setBookId(book.getId());
+            lentDTO.setBookTitle(book.getTitle());
+            lentDTO.setBookAuthor(book.getAuthor());
+            lentDTO.setBookIsbn(book.getIsbn());
+            lentDTO.setInizioPrestito(lent.getInizioPrestito());
+            lentDTO.setFinePrestito(lent.getFinePrestito());
+            lentDTOs.add(lentDTO);
         }
-        dto.setLent(bookDTOs);
+        dto.setLent(lentDTOs);
         return dto;
     }
 }

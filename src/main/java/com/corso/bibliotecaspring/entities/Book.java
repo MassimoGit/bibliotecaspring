@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "book")
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -26,9 +27,6 @@ public class Book {
     @Column(name = "isbn", nullable = false)
     private String isbn;
 
-
-    @ManyToMany(mappedBy = "lent")
-    private List<User> lent = new ArrayList<User>();
-
-
+    @OneToMany(mappedBy = "book")
+    private List<Lent> lent = new ArrayList<Lent>();
 }

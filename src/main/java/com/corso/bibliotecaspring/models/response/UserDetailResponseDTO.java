@@ -12,5 +12,5 @@ public class UserDetailResponseDTO {
     private String surname;
     private String email;
     private String phone;
-    private List<BookResponseDTO> lent; // libri attualmente in prestito
+    private List<LentResponseDTO> lent; // prestiti attivi e passati dell'utente
 }
