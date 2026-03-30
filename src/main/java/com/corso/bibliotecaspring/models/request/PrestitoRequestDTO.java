@@ -1,12 +1,9 @@
 package com.corso.bibliotecaspring.models.request;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-
-@Getter
-@Setter
+@Data
 public class PrestitoRequestDTO {
 
     @NotNull(message = "L'ID utente è obbligatorio")
