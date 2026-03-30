@@ -17,9 +17,7 @@ public class PrestitoController {
         this.prestitoService = prestitoService;
     }
 
-    // POST /api/prestiti — crea un nuovo prestito
-    // Corpo JSON: { "userId": 1, "bookId": 2, "inizioPrestito": "2026-03-30", "finePrestito": "2026-04-30" }
-    @PostMapping
+      @PostMapping
     public ResponseEntity<LentResponseDTO> addPrestito(@RequestBody PrestitoRequestDTO dto) {
         LentResponseDTO result = prestitoService.addPrestito(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);

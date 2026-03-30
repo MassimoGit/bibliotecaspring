@@ -1,6 +1,5 @@
 package com.corso.bibliotecaspring.services;
 
-import com.corso.bibliotecaspring.entities.Book;
 import com.corso.bibliotecaspring.entities.Lent;
 import com.corso.bibliotecaspring.entities.User;
 import com.corso.bibliotecaspring.exceptions.ResourceNotFoundException;
@@ -17,9 +16,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PrestitoService prestitoService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PrestitoService prestitoService) {
         this.userRepository = userRepository;
+        this.prestitoService = prestitoService;
     }
 
     public List<UserResponseDTO> findAll() {
@@ -62,6 +63,7 @@ public class UserService {
     }
 
     // Converte l'entity User nel DTO di dettaglio (con lista prestiti)
+    // Delega la mappatura di ogni Lent a PrestitoService.toDTO per evitare duplicazioni
     public UserDetailResponseDTO toDetailDTO(User user) {
         UserDetailResponseDTO dto = new UserDetailResponseDTO();
         dto.setId(user.getId());
@@ -72,16 +74,7 @@ public class UserService {
 
         List<LentResponseDTO> lentDTOs = new ArrayList<>();
         for (Lent lent : user.getLent()) {
-            Book book = lent.getBook();
-            LentResponseDTO lentDTO = new LentResponseDTO();
-            lentDTO.setId(lent.getId());
-            lentDTO.setBookId(book.getId());
-            lentDTO.setBookTitle(book.getTitle());
-            lentDTO.setBookAuthor(book.getAuthor());
-            lentDTO.setBookIsbn(book.getIsbn());
-            lentDTO.setInizioPrestito(lent.getInizioPrestito());
-            lentDTO.setFinePrestito(lent.getFinePrestito());
-            lentDTOs.add(lentDTO);
+            lentDTOs.add(prestitoService.toDTO(lent));
         }
         dto.setLent(lentDTOs);
         return dto;

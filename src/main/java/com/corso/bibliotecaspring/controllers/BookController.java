@@ -19,19 +19,19 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    // GET /api/libri — restituisce tutti i libri disponibili nel catalogo
+
     @GetMapping
     public ResponseEntity<List<BookResponseDTO>> findAll() {
         return ResponseEntity.ok(bookService.findAll());
     }
 
-    // POST /api/libri — aggiunge un nuovo libro al catalogo
+
     @PostMapping
     public ResponseEntity<BookResponseDTO> create(@RequestBody Book book) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(book));
     }
 
-    // DELETE /api/libri/{id} — rimuove un libro dal catalogo
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);
