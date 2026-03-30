@@ -1,6 +1,6 @@
 package com.corso.bibliotecaspring.exceptions;
 
-import com.corso.bibliotecaspring.models.ErrorResponse;
+import com.corso.bibliotecaspring.models.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

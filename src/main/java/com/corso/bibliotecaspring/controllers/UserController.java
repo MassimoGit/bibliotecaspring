@@ -20,25 +20,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    // GET /api/utenti — restituisce la lista di tutti gli utenti registrati
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    // GET /api/utenti/{id} — restituisce i dati anagrafici + lista libri in prestito
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findDetailById(id));
     }
 
-    // POST /api/utenti — registra un nuovo utente
+
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@RequestBody User user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(user));
     }
 
-    // DELETE /api/utenti/{id} — elimina un utente dal sistema
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);

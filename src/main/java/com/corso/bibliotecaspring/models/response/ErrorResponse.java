@@ -1,4 +1,4 @@
-package com.corso.bibliotecaspring.models;
+package com.corso.bibliotecaspring.models.response;
 
 // Classe semplice per restituire un messaggio di errore strutturato
 // Non usiamo Lombok qui: getters e costruttore scritti a mano (bad practice intenzionale)
