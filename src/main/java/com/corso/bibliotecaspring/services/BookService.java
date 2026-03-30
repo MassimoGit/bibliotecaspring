@@ -1,6 +1,5 @@
 package com.corso.bibliotecaspring.services;
 
-import com.corso.bibliotecaspring.models.request.BookRequestDTO;
 import com.corso.bibliotecaspring.models.response.BookResponseDTO;
 import com.corso.bibliotecaspring.entities.Book;
 import com.corso.bibliotecaspring.exceptions.ResourceNotFoundException;
@@ -28,11 +27,8 @@ public class BookService {
         return result;
     }
 
-    public BookResponseDTO create(BookRequestDTO dto) {
-        Book book = new Book();
-        book.setTitle(dto.getTitle());
-        book.setAuthor(dto.getAuthor());
-        book.setIsbn(dto.getIsbn());
+    // Riceve l'entity direttamente dal controller (bad practice: nessuna validazione)
+    public BookResponseDTO create(Book book) {
         Book saved = bookRepository.save(book);
         return toDTO(saved);
     }

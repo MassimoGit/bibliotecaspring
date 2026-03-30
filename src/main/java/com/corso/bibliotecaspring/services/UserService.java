@@ -1,12 +1,11 @@
 package com.corso.bibliotecaspring.services;
 
-import com.corso.bibliotecaspring.models.response.BookResponseDTO;
-import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
-import com.corso.bibliotecaspring.models.request.UserRequestDTO;
-import com.corso.bibliotecaspring.models.response.UserResponseDTO;
-import com.corso.bibliotecaspring.entities.Book;
+import com.corso.bibliotecaspring.entities.Lent;
 import com.corso.bibliotecaspring.entities.User;
 import com.corso.bibliotecaspring.exceptions.ResourceNotFoundException;
+import com.corso.bibliotecaspring.models.response.LentResponseDTO;
+import com.corso.bibliotecaspring.models.response.UserDetailResponseDTO;
+import com.corso.bibliotecaspring.models.response.UserResponseDTO;
 import com.corso.bibliotecaspring.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PrestitoService prestitoService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PrestitoService prestitoService) {
         this.userRepository = userRepository;
+        this.prestitoService = prestitoService;
     }
 
     public List<UserResponseDTO> findAll() {
@@ -31,19 +32,15 @@ public class UserService {
         return result;
     }
 
-    // Restituisce il dettaglio utente con la lista dei libri attualmente in prestito
+    // Restituisce il dettaglio utente con la lista di tutti i suoi prestiti (attivi e passati)
     public UserDetailResponseDTO findDetailById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " + id));
         return toDetailDTO(user);
     }
 
-    public UserResponseDTO create(UserRequestDTO dto) {
-        User user = new User();
-        user.setName(dto.getName());
-        user.setSurname(dto.getSurname());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
+    // Riceve l'entity direttamente dal controller (bad practice: nessuna validazione)
+    public UserResponseDTO create(User user) {
         User saved = userRepository.save(user);
         return toDTO(saved);
     }
@@ -54,7 +51,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    // Converte l'entity User nel DTO semplice (senza lista libri)
+    // Converte l'entity User nel DTO semplice (senza lista prestiti)
     public UserResponseDTO toDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
@@ -65,7 +62,8 @@ public class UserService {
         return dto;
     }
 
-    // Converte l'entity User nel DTO di dettaglio (con lista libri in prestito)
+    // Converte l'entity User nel DTO di dettaglio (con lista prestiti)
+    // Delega la mappatura di ogni Lent a PrestitoService.toDTO per evitare duplicazioni
     public UserDetailResponseDTO toDetailDTO(User user) {
         UserDetailResponseDTO dto = new UserDetailResponseDTO();
         dto.setId(user.getId());
@@ -74,16 +72,11 @@ public class UserService {
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
 
-        List<BookResponseDTO> bookDTOs = new ArrayList<>();
-        for (Book book : user.getLent()) {
-            BookResponseDTO bookDTO = new BookResponseDTO();
-            bookDTO.setId(book.getId());
-            bookDTO.setTitle(book.getTitle());
-            bookDTO.setAuthor(book.getAuthor());
-            bookDTO.setIsbn(book.getIsbn());
-            bookDTOs.add(bookDTO);
+        List<LentResponseDTO> lentDTOs = new ArrayList<>();
+        for (Lent lent : user.getLent()) {
+            lentDTOs.add(prestitoService.toDTO(lent));
         }
-        dto.setLent(bookDTOs);
+        dto.setLent(lentDTOs);
         return dto;
     }
 }
